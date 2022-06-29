@@ -39,8 +39,8 @@ if (!txspCookie) {
    /*console.log(`------------- 共${kkdcookieArr.length}个账号----------------\n`)
   for (let i = 0; i < kkdcookieArr.length; i++) {*/
     else if (txspCookie) {
-  
-    await getSign();
+  console.log(`------------- 任务----------------\n`)
+      await getSign();
 
       await Browse();
       await watchVid();
@@ -105,12 +105,12 @@ if (signres.err_code == 20011) {
               
             }else if (signres.err_code == 22001) {
                 $.log('该账号存在安全风险‼️');
-                 //return;
+                 return;
               
             }
 else {
            $.log(`cookie失效‼️`);
-            return;
+            
 
 }
 
@@ -133,7 +133,7 @@ function Browse(){
         $.post(jl1Host('browse','{"activity_id":1001,"browse_page":"caochangdi","task_group_id":"4"}'),async(error, resp, data) => {
        result = JSON.parse(data);
 
-console.log(`=============浏览任务============`);
+console.log(`=============浏览============`);
 
 if (result.err_msg == "") {
                 
@@ -164,7 +164,7 @@ function watchVid(){
         $.post(jl1Host('WatchVideo','{"activity_id":1001,"vid":"mzc00200p51jpn7","task_group_id":"1"}'),async(error, resp, data) => {
        result = JSON.parse(data);
 
-console.log(`=============看视频任务============`);
+console.log(`=============看视频============`);
 
 if (result.err_msg == "") {
                 
