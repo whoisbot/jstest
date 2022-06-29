@@ -38,7 +38,7 @@ if (!txspCookie) {
   }
    /*console.log(`------------- 共${kkdcookieArr.length}个账号----------------\n`)
   for (let i = 0; i < kkdcookieArr.length; i++) {*/
-    if (txspCookie) {
+    else if (txspCookie) {
   
     await getSign();
 
@@ -60,19 +60,30 @@ function jlHost(api, body) {
         headers: {
           'Origin' : `https://fuli.v.qq.com/`,
 'Cookie' : txspCookie,
-'Accept' : `application/json, text/plain, */*`,
+'Accept' : `*/*`,
 'Content-Type' : `application/json`,
 'Referer' : `https://fuli.v.qq.com/`,
 'Host' : `pbaccess.video.qq.com`,
-'User-Agent' : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_5 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11A465 QQLiveBrowser/8.6.25 AppType/UN WebKitCore/WKWebView iOS GDTTangramMobSDK/4.370.6 GDTMobSDK/4.370.6 cellPhone/iPhone 13`,
-'Accept-Language' : `en-us,zh-CN,zh-Hans;q=0.9`,
-'Accept-Encoding' : `gzip, deflate, br`,
+'User-Agent' : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.23(0x18001729) NetType/WIFI Language/zh_CN`,
+'Accept-Language' : `en-us`,
+'Accept-Encoding' : `gzip, deflate`,
 'Connection' : `keep-alive`
         },
         body: body,
         //timeout: 1000,
     }
 }
+
+
+function jl1Host(api, body) {
+    return {
+        url: 'https://pbaccess.video.qq.com/activity/platform/gateway/v2/' + api,
+        headers: {"Accept": "application/json, text/plain, */*","Accept-Encoding": "gzip, deflate, br","Accept-Language": "zh-CN,zh-Hans;q=0.9","Connection": "keep-alive","Content-Type": "application/json","Cookie":txspCookie ,"Host": "pbaccess.video.qq.com","Origin": "https://fuli.v.qq.com","Referer": "https://fuli.v.qq.com/","User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_5 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Mobile/11A465 QQLiveBrowser/8.6.25 AppType/UN WebKitCore/WKWebView iOS GDTTangramMobSDK/4.370.6 GDTMobSDK/4.370.6 cellPhone/iPhone 13"},
+        body: body,
+        //timeout: 1000,
+    }
+}
+
 
 
 
@@ -94,7 +105,7 @@ if (signres.err_code == 20011) {
               
             }else if (signres.err_code == 22001) {
                 $.log('该账号存在安全风险‼️');
-                 return;
+                 //return;
               
             }
 else {
@@ -103,7 +114,6 @@ else {
 
 }
 
-                
             
 
             resolve()
@@ -120,7 +130,7 @@ else {
 
 function Browse(){
         return new Promise((resolve, reject) => {
-        $.post(jlHost('browse','{"activity_id":1001,"browse_page":"caochangdi","task_group_id":"4"}'),async(error, resp, data) => {
+        $.post(jl1Host('browse','{"activity_id":1001,"browse_page":"caochangdi","task_group_id":"4"}'),async(error, resp, data) => {
        result = JSON.parse(data);
 
 console.log(`=============浏览任务============`);
@@ -129,7 +139,7 @@ if (result.err_msg == "") {
                 
                 $.log(`浏览任务完成☀️`);
                 
-            } else if (result.err_msg == success) {
+            } else if (result.err_msg == 'success') {
                 $.log('【浏览结果】成功 🎉 金币: 10');
               
             }
@@ -138,8 +148,6 @@ else {
 
 }
                 
-            
-
             resolve()
         })
 
@@ -153,7 +161,7 @@ else {
 
 function watchVid(){
         return new Promise((resolve, reject) => {
-        $.post(jlHost('WatchVideo','{"activity_id":1001,"vid":"mzc00200p51jpn7","task_group_id":"1"}'),async(error, resp, data) => {
+        $.post(jl1Host('WatchVideo','{"activity_id":1001,"vid":"mzc00200p51jpn7","task_group_id":"1"}'),async(error, resp, data) => {
        result = JSON.parse(data);
 
 console.log(`=============看视频任务============`);
@@ -162,7 +170,7 @@ if (result.err_msg == "") {
                 
                 $.log(`看视频完成☀️`);
                 
-            } else if (result.err_msg == success) {
+            } else if (result.err_msg == 'success') {
                 $.log('【观看结果】成功 🎉 金币: 10');
               
             }
@@ -170,7 +178,7 @@ else {
            $.log(`cookie失效‼️`);
 
 }
-                
+              
             
 
             resolve()
