@@ -23,6 +23,32 @@ const $ = new Env("腾讯视频-福利中心")
 
 const txspCookie=$.getdata('txspCookie');
 
+const txspCookieArr = [];
+
+
+
+
+
+
+async function tips(ckArr) {
+    console.log(
+        `\n脚本执行 - 北京时间(UTC+8): ${new Date(
+              new Date().getTime() +
+              new Date().getTimezoneOffset() * 60 * 1000 +
+              8 * 60 * 60 * 1000
+          ).toLocaleString()} \n`
+    );
+
+    console.log(
+        `\n=================== 共找到 ${ckArr.length} 个账号 ===================`
+    );
+    
+}
+
+
+
+
+
 
 
 let isGetCookie = typeof $request !== 'undefined'
@@ -39,11 +65,19 @@ if (!txspCookie) {
    /*console.log(`------------- 共${kkdcookieArr.length}个账号----------------\n`)
   for (let i = 0; i < kkdcookieArr.length; i++) {*/
     else if (txspCookie) {
+timeZone = new Date().getTimezoneOffset() / 60;
+        timestamp = Date.now() + (8 + timeZone) * 60 * 60 * 1000;
+        bjTime = new Date(timestamp).toLocaleString('zh', {hour12: false, timeZoneName: 'long'});
+        $.log(`\n 脚本执行${bjTime} \n`);
+
+
+
   console.log(`------------- 任务----------------\n`)
       await getSign();
-
       await Browse();
       await watchVid();
+
+await showmsg();
        
   //}
  }
@@ -99,9 +133,11 @@ function getSign(){
 if (signres.err_code == 20011) {
                 
                 $.log(`今日已签到☀️`);
+  $.desc = `今日已签到☀️\n`;
                 
             } else if (signres.err_code == 0) {
                 $.log('【签到结果】成功 🎉 金币: '+signres.data.reward_count+'，连续签到天数: '+signres.data.days);
+
               
             }else if (signres.err_code == 22001) {
                 $.log('该账号存在安全风险‼️');
@@ -138,6 +174,8 @@ console.log(`=============浏览============`);
 if (result.err_msg == "") {
                 
                 $.log(`浏览任务完成☀️`);
+  $.desc += `浏览任务完成☀️\n`;
+
                 
             } else if (result.err_msg == 'success') {
                 $.log('【浏览结果】成功 🎉 金币: 10');
@@ -169,6 +207,7 @@ console.log(`=============看视频============`);
 if (result.err_msg == "") {
                 
                 $.log(`看视频完成☀️`);
+$.desc += `看视频完成☀️\n`;
                 
             } else if (result.err_msg == 'success') {
                 $.log('【观看结果】成功 🎉 金币: 10');
@@ -190,7 +229,6 @@ else {
 
 
 
-
 //获取ck
 function GetCookie() {
   try {
@@ -198,19 +236,35 @@ function GetCookie() {
         var CookieName = "腾讯视频";
         var CookieKey = "txspCookie";
         var CookieValue =$request.headers['Cookie'];
-      if ($.getdata(CookieKey)) {
-        if ($.getdata(CookieKey) != CookieValue) {
+var str='';
+var str2='';
+
+         str+=$.getdata(CookieKey).match(/nickname=.*?;/);
+        str2+=CookieValue.match(/nickname=.*?;/);
+
+     
+      if ($.getdata(CookieKey)&& str==str2&& str2!='null') {
+        if ($.getdata(CookieKey) != CookieValue ) {
           var cookie = $.setdata(CookieValue, CookieKey);
           if (cookie) {
-            $.msg("", "", "更新" + CookieName + "Cookie成功 🎉"+CookieValue);
+            $.msg("", "", "更新" + CookieName + "Cookie成功 🎉\n"+CookieValue);
           }
         }
-      } else {
+      } else if(!$.getdata(CookieKey)&&str2!='null'){
         var cookie = $.setdata(CookieValue, CookieKey);
         if (cookie) {
-          $.msg("", "", "首次写入" + CookieName + "Cookie成功 🎉"+CookieValue);
+          $.msg("", "", "首次写入" + CookieName + "Cookie成功 🎉\n");
         }
       }
+         else if($.getdata(CookieKey)&&str2!=str&& str2!='null'){
+
+      var cookie = $.setdata(CookieValue, CookieKey);
+        if (cookie) {
+          $.msg("", "", "首次写入" + CookieName + "Cookie成功m 🎉\n");
+        }
+
+
+         }
     } 
   } catch (eor) {
     $.msg("写入Cookie失败", "", "未知错误 ‼️")
@@ -218,6 +272,17 @@ function GetCookie() {
   }
   $.done();
 }
+
+
+
+
+
+async function showmsg() {
+$.msg('腾讯视频',$.desc);
+    
+}
+
+
 
 
 
