@@ -252,10 +252,10 @@ function GetCookie() {
     if (CookieValue && catchname) {
       cookie();
       function cookie() {
-        var bodys = $.getdata("txspCookie" + $.idx);
+        var bodys = $.getdata("txspCookie" + $.idx);        
+        if (bodys) {
         var getname = "";
         getname += bodys.match(/nickname=.*?;/);
-        if (bodys) {
           if (getname == catchname) {
             $.setdata(CookieValue, "txspCookie" + $.idx);
             $.log(
