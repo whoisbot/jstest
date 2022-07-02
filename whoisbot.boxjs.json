@@ -7,7 +7,7 @@
     "apps": [{
             "id": "txsp",
             "name": "腾讯视频-福利兑换",
-            "keys": ["txspCookie", "txspCookie2", "txspCookie3", "txspCookie4", "txspCookie5", "txspCookie6", "txspCookie7", "txspCookie8", "txspCookie9", "txspCookie10", "txspCookie11", "txspCookie12", "txspCookie13", "txspCookie14", "txspCookie15", "txspCookie16", "txspCookie17", "txspCookie18", "txspCookie19", "txspCookie20"],
+            "keys": ["txspCookie1", "txspCookie2", "txspCookie3", "txspCookie4", "txspCookie5", "txspCookie6", "txspCookie7", "txspCookie8", "txspCookie9", "txspCookie10", "txspCookie11", "txspCookie12", "txspCookie13", "txspCookie14", "txspCookie15", "txspCookie16", "txspCookie17", "txspCookie18", "txspCookie19", "txspCookie20"],
             "author": "@whoisbot",
             "settings": [{
                     "id": "txspSuffix",
