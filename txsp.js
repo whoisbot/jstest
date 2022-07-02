@@ -1,33 +1,47 @@
 /*
 腾讯视频-福利中心
-邀请码：8303
-邀请注册：https://fuli.v.qq.com/h5/activity/welfare_center_new/index.html?source=page_id%3Ddefault%26pgid%3Dpage_personal_center%26page_type%3Dpersonal%26is_interactive_flag%3D1%26pg_clck_flag%3D1%26eid%3Dwelfare_center%26mod_id%3Dsp_mycntr_common%26sectiontype%3D2%26styletype%3D202%26flush_num%3D0%26section_idx%3D0%26red_dot%3D0%26mod_title%3D%25E5%25B8%25B8%25E7%2594%25A8%25E5%258A%259F%25E8%2583%25BD%26blocktype%3D6001%26mod_idx%3D5%26item_idx%3D4%26layouttype%3D2%26action_pos%3Djump&ptag=grzx%23/&isDarkMode=0&uiType=REGULAR&url_from=share&second_share=0&share_from=copy#/invite?vuid=813292650
+邀请注册：https://fuli.v.qq.com/h5/activity/welfare_center_new/?ptag=cygn&z=1%23/&source=page_id%3Ddefault%26pgid%3Dpage_personal_center%26page_type%3Dpersonal%26is_interactive_flag%3D1%26pg_clck_flag%3D1%26eid%3Dwelfare_center%26mod_id%3Dsp_mycntr_common%26sectiontype%3D2%26styletype%3D202%26flush_num%3D0%26section_idx%3D0%26red_dot%3D0%26mod_title%3D%25E5%25B8%25B8%25E7%2594%25A8%25E5%258A%259F%25E8%2583%25BD%26blocktype%3D6001%26mod_idx%3D5%26item_idx%3D2%26layouttype%3D2%26action_pos%3Djump&hidetitlebar=0&isDarkMode=1&uiType=MAX&url_from=share&second_share=0&share_from=copy#/invite?svuid=&gpid=undefined&z=1
 
-签到+互助，一天40金币
-腾讯视频app->我的->常用功能-福利兑换，捉里面pbaccess.video.qq.com的CK
+签到+浏览任务，一天30金币
+腾讯视频app->我的->常用功能-福利兑换，点下边广告，抓取v.qq.com/x/services里面的CK
 放到txspCookie里，多账号换行或者@或者&隔开
 
 重写：
 [task_local]
 #腾讯视频-福利中心
-3 0,8 * * * https://raw.githubusercontent.com/leafTheFish/DeathNote/main/txspfl.js, tag=腾讯视频-福利中心, enabled=true
+3 0,8 * * * https://raw.githubusercontent.com/whoisbot/jstest/main/txsp.js, tag=腾讯视频-福利中心, enabled=true
 [rewrite_local]
-https://pbaccess.video.qq.com/activity/welfare_center/queryUserActivity url script-request-header https://raw.githubusercontent.com/leafTheFish/DeathNote/main/txspfl.js
+https?:\/\/v\.qq\.com\/x\/services\/fontmin\?font=.* url script-request-header https://raw.githubusercontent.com/whoisbot/jstest/main/txsp.js
 [MITM]
-hostname = pbaccess.video.qq.com
+hostname = v.qq.com
 
 cron: 3 0,10 * * *
+
+可以配合boxjs。
+订阅地址
+https://raw.githubusercontent.com/whoisbot/jstest/main/whoisbot.boxjs.json
+
 */
 
 const $ = new Env("腾讯视频-福利中心")
 
-const txspCookie=$.getdata('txspCookie');
+
+$.idx = $.getval("txspSuffix")||'1';
+
+
+
 
 const txspCookieArr = [];
+const ckCount='2';//这里填写运行账号数量
 
 
-
-
+let txspCount = $.getval("txspCount") || ckCount;
+        for (let i = 1; i <= txspCount; i++) {
+            if ($.getdata(`txspCookie${i}`)) {
+             
+                txspCookieArr.push($.getdata(`txspCookie${i}`));
+            }
+        }
 
 
 async function tips(ckArr) {
@@ -40,7 +54,7 @@ async function tips(ckArr) {
     );
 
     console.log(
-        `\n=================== 共找到 ${ckArr.length} 个账号 ===================`
+        `\n=== 共找到 ${ckArr.length} 个账号 ===`
     );
     
 }
@@ -51,36 +65,34 @@ async function tips(ckArr) {
 
 
 
-let isGetCookie = typeof $request !== 'undefined'
+let isGetCookie = typeof $request !== 'undefined';
 if (isGetCookie) {
    GetCookie();
    $.done()
 } 
 
 !(async () => {
-if (!txspCookie) {
+ 
+if (!txspCookieArr.length) {
     $.msg( '【提示】请先获取腾讯视频一cookie')
     return;
   }
-   /*console.log(`------------- 共${kkdcookieArr.length}个账号----------------\n`)
-  for (let i = 0; i < kkdcookieArr.length; i++) {*/
-    else if (txspCookie) {
-timeZone = new Date().getTimezoneOffset() / 60;
-        timestamp = Date.now() + (8 + timeZone) * 60 * 60 * 1000;
-        bjTime = new Date(timestamp).toLocaleString('zh', {hour12: false, timeZoneName: 'long'});
-        $.log(`\n 脚本执行${bjTime} \n`);
+  
+    else if (txspCookieArr.length) {
 
-
+tips(txspCookieArr);
+for (let i = 0; i < txspCookieArr.length; i++) {
+  txspCookie=txspCookieArr[i];
 
   console.log(`------------- 任务----------------\n`)
       await getSign();
       await Browse();
       await watchVid();
-
-await showmsg();
+      await showmsg();
        
-  //}
+ 
  }
+}
 })()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
@@ -137,6 +149,7 @@ if (signres.err_code == 20011) {
                 
             } else if (signres.err_code == 0) {
                 $.log('【签到结果】成功 🎉 金币: '+signres.data.reward_count+'，连续签到天数: '+signres.data.days);
+$.desc = '【签到结果】成功 🎉 金币: '+signres.data.reward_count+'，连续签到天数: '+signres.data.days+'\n';
 
               
             }else if (signres.err_code == 22001) {
@@ -174,11 +187,12 @@ console.log(`=============浏览============`);
 if (result.err_msg == "") {
                 
                 $.log(`浏览任务完成☀️`);
-  $.desc += `浏览任务完成☀️\n`;
+ $.desc += `浏览任务完成☀️\n`;
 
                 
             } else if (result.err_msg == 'success') {
                 $.log('【浏览结果】成功 🎉 金币: 10');
+  $.desc += '【浏览结果】成功 🎉 金币: 10\n';
               
             }
 else {
@@ -211,7 +225,7 @@ $.desc += `看视频完成☀️\n`;
                 
             } else if (result.err_msg == 'success') {
                 $.log('【观看结果】成功 🎉 金币: 10');
-              
+              $.desc += `【观看结果】成功 🎉 金币: 10\n`;
             }
 else {
            $.log(`cookie失效‼️`);
@@ -231,48 +245,47 @@ else {
 
 //获取ck
 function GetCookie() {
-  try {
-    if ($request && $request.url.match(/v\.qq\.com/)) {
-        var CookieName = "腾讯视频";
-        var CookieKey = "txspCookie";
-        var CookieValue =$request.headers['Cookie'];
-var str='';
-var str2='';
-
-         str+=$.getdata(CookieKey).match(/nickname=.*?;/);
-        str2+=CookieValue.match(/nickname=.*?;/);
-
-     
-      if ($.getdata(CookieKey)&& str==str2&& str2!='null') {
-        if ($.getdata(CookieKey) != CookieValue ) {
-          var cookie = $.setdata(CookieValue, CookieKey);
-          if (cookie) {
-            $.msg("", "", "更新" + CookieName + "Cookie成功 🎉\n"+CookieValue);
+  if ($request && $request.url.match(/v\.qq\.com/)) {
+    var CookieValue = $request.headers["Cookie"];
+    var catchname = "";
+    catchname += CookieValue.match(/nickname=.*?;/);
+    if (CookieValue && catchname) {
+      cookie();
+      function cookie() {
+        var bodys = $.getdata("txspCookie" + $.idx);
+        var getname = "";
+        getname += bodys.match(/nickname=.*?;/);
+        if (bodys) {
+          if (getname == catchname) {
+            $.setdata(CookieValue, "txspCookie" + $.idx);
+            $.log(
+              `[${
+                $.name + $.idx
+              }] 更新CookieValue✅: 成功,CookieValue: ${CookieValue}`
+            );
+            $.msg($.name + $.idx, `更新CookieValue: 成功🎉, CookieValue: ${CookieValue}`);
+            $.done();
+          } else {
+            $.idx = +$.idx + 1;
+            cookie();
           }
-        }
-      } else if(!$.getdata(CookieKey)&&str2!='null'){
-        var cookie = $.setdata(CookieValue, CookieKey);
-        if (cookie) {
-          $.msg("", "", "首次写入" + CookieName + "Cookie成功 🎉\n");
+        } else {
+          $.setdata(CookieValue, "txspCookie" + $.idx);
+          $.log(
+            `[${
+              $.name + $.idx
+            }] 获取CookieValue✅: 成功,CookieValue: ${CookieValue}`
+          );
+          $.msg(
+            $.name + $.idx,
+            `获取CookieValue: 成功🎉, CookieValue: ${CookieValue}`
+          );
+          $.done();
         }
       }
-         else if($.getdata(CookieKey)&&str2!=str&& str2!='null'){
-
-      var cookie = $.setdata(CookieValue, CookieKey);
-        if (cookie) {
-          $.msg("", "", "首次写入" + CookieName + "Cookie成功m 🎉\n");
-        }
-
-
-         }
-    } 
-  } catch (eor) {
-    $.msg("写入Cookie失败", "", "未知错误 ‼️")
-    $.log(JSON.stringify(eor) + "\n" + eor + "\n" + JSON.stringify($request.headers))
+    }
   }
-  $.done();
 }
-
 
 
 
