@@ -1,26 +1,22 @@
 /*
 腾讯视频-福利中心
-邀请注册：https://fuli.v.qq.com/h5/activity/welfare_center_new/?ptag=cygn&z=1%23/&source=page_id%3Ddefault%26pgid%3Dpage_personal_center%26page_type%3Dpersonal%26is_interactive_flag%3D1%26pg_clck_flag%3D1%26eid%3Dwelfare_center%26mod_id%3Dsp_mycntr_common%26sectiontype%3D2%26styletype%3D202%26flush_num%3D0%26section_idx%3D0%26red_dot%3D0%26mod_title%3D%25E5%25B8%25B8%25E7%2594%25A8%25E5%258A%259F%25E8%2583%25BD%26blocktype%3D6001%26mod_idx%3D5%26item_idx%3D2%26layouttype%3D2%26action_pos%3Djump&hidetitlebar=0&isDarkMode=1&uiType=MAX&url_from=share&second_share=0&share_from=copy#/invite?svuid=&gpid=undefined&z=1
+邀请码：8303
+邀请注册：https://fuli.v.qq.com/h5/activity/welfare_center_new/index.html?source=page_id%3Ddefault%26pgid%3Dpage_personal_center%26page_type%3Dpersonal%26is_interactive_flag%3D1%26pg_clck_flag%3D1%26eid%3Dwelfare_center%26mod_id%3Dsp_mycntr_common%26sectiontype%3D2%26styletype%3D202%26flush_num%3D0%26section_idx%3D0%26red_dot%3D0%26mod_title%3D%25E5%25B8%25B8%25E7%2594%25A8%25E5%258A%259F%25E8%2583%25BD%26blocktype%3D6001%26mod_idx%3D5%26item_idx%3D4%26layouttype%3D2%26action_pos%3Djump&ptag=grzx%23/&isDarkMode=0&uiType=REGULAR&url_from=share&second_share=0&share_from=copy#/invite?vuid=813292650
 
-签到+浏览任务，一天30金币
-腾讯视频app->我的->常用功能-福利兑换，点下边广告，抓取v.qq.com/x/services里面的CK
+签到+互助，一天40金币
+腾讯视频app->我的->常用功能-福利兑换，捉里面pbaccess.video.qq.com的CK
 放到txspCookie里，多账号换行或者@或者&隔开
 
 重写：
 [task_local]
 #腾讯视频-福利中心
-3 0,8 * * * https://raw.githubusercontent.com/whoisbot/jstest/main/txsp.js, tag=腾讯视频-福利中心, enabled=true
+3 0,8 * * * https://raw.githubusercontent.com/leafTheFish/DeathNote/main/txspfl.js, tag=腾讯视频-福利中心, enabled=true
 [rewrite_local]
-https?:\/\/v\.qq\.com\/x\/services\/fontmin\?font=.* url script-request-header https://raw.githubusercontent.com/whoisbot/jstest/main/txsp.js
+https://pbaccess.video.qq.com/activity/welfare_center/queryUserActivity url script-request-header https://raw.githubusercontent.com/leafTheFish/DeathNote/main/txspfl.js
 [MITM]
-hostname = v.qq.com
+hostname = pbaccess.video.qq.com
 
 cron: 3 0,10 * * *
-
-可以配合boxjs。
-订阅地址
-https://raw.githubusercontent.com/whoisbot/jstest/main/whoisbot.boxjs.json
-
 */
 
 const $ = new Env("腾讯视频-福利中心")
@@ -30,9 +26,9 @@ $.idx = $.getval("txspSuffix")||'1';
 
 
 
-
+//const txspCookie= $.getdata("txspCookie");
 const txspCookieArr = [];
-const ckCount='2';//这里填写运行账号数量
+const ckCount='2';
 
 
 let txspCount = $.getval("txspCount") || ckCount;
@@ -159,6 +155,7 @@ $.desc = '【签到结果】成功 🎉 金币: '+signres.data.reward_count+'，
             }
 else {
            $.log(`cookie失效‼️`);
+$.done();
             
 
 }
@@ -197,6 +194,7 @@ if (result.err_msg == "") {
             }
 else {
            $.log(`cookie失效‼️`);
+$.done();
 
 }
                 
@@ -229,6 +227,7 @@ $.desc += `看视频完成☀️\n`;
             }
 else {
            $.log(`cookie失效‼️`);
+$.done();
 
 }
               
@@ -252,10 +251,10 @@ function GetCookie() {
     if (CookieValue && catchname) {
       cookie();
       function cookie() {
-        var bodys = $.getdata("txspCookie" + $.idx);        
-        if (bodys) {
+        var bodys = $.getdata("txspCookie" + $.idx);
         var getname = "";
         getname += bodys.match(/nickname=.*?;/);
+        if (bodys) {
           if (getname == catchname) {
             $.setdata(CookieValue, "txspCookie" + $.idx);
             $.log(
@@ -291,7 +290,7 @@ function GetCookie() {
 
 
 async function showmsg() {
-$.msg('腾讯视频',$.desc);
+$.msg('腾讯视频','',$.desc);
     
 }
 
