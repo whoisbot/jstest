@@ -4,7 +4,7 @@
 
 签到+浏览任务，一天30金币
 腾讯视频app->我的->常用功能-福利兑换，点下边广告，抓取v.qq.com/x/services里面的CK
-放到txspCookie里，多账号换行或者@或者&隔开
+
 
 重写：
 [task_local]
